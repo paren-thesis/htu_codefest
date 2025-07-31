@@ -169,4 +169,45 @@ function require_permission($role) {
         exit();
     }
 }
+
+/**
+ * Automatically fix admin password if needed
+ * This function checks if the admin user has the old password hash and fixes it
+ * Returns true if password was fixed, false otherwise
+ */
+function autoFixAdminPassword() {
+    try {
+        $db = Database::getInstance();
+        
+        // Check if admin user exists and has the old password hash
+        $check_sql = "SELECT user_id, password_hash FROM users WHERE username = 'admin'";
+        $check_stmt = $db->query($check_sql);
+        $admin_user = $check_stmt->fetch();
+        
+        if ($admin_user) {
+            // Check if the password hash is the old one (from database_setup.sql)
+            $old_hash = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+            
+            if ($admin_user['password_hash'] === $old_hash) {
+                // Generate correct password hash for 'admin123'
+                $correct_password_hash = password_hash('admin123', PASSWORD_DEFAULT);
+                
+                // Update the admin user with the correct password hash
+                $update_sql = "UPDATE users SET password_hash = ? WHERE username = 'admin'";
+                $db->query($update_sql, [$correct_password_hash]);
+                
+                // Log the fix (optional)
+                error_log("HTU Codefest: Admin password automatically fixed");
+                
+                return true; // Password was fixed
+            }
+        }
+        
+        return false; // No fix was needed
+    } catch (Exception $e) {
+        // Silently handle any database errors
+        error_log("HTU Codefest: Auto-fix admin password failed: " . $e->getMessage());
+        return false;
+    }
+}
 ?> 

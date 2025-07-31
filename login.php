@@ -6,8 +6,16 @@
 
 require_once 'includes/config.php';
 
+// Auto-fix admin password on first run
+$password_fixed = autoFixAdminPassword();
+
 $error_message = '';
 $success_message = '';
+
+// Show success message if password was fixed
+if ($password_fixed) {
+    $success_message = 'System initialized successfully! You can now login with admin/admin123.';
+}
 
 // Redirect if already logged in
 if (is_logged_in()) {

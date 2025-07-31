@@ -6,6 +6,9 @@
 
 require_once 'includes/config.php';
 
+// Auto-fix admin password on first run
+autoFixAdminPassword();
+
 // Redirect to login if not authenticated
 if (!is_logged_in()) {
     header('Location: login.php');
