@@ -118,6 +118,7 @@ LEFT JOIN payments pay ON s.student_id = pay.student_id
 GROUP BY s.student_id, s.index_no, s.first_name, s.surname, s.email, s.academic_year, p.programme_name, s.position, s.created_at;
 
 -- Create default administrator user (password: admin123)
+-- Note: This hash will be updated by the fix_admin_password.php script
 INSERT INTO users (username, password_hash, email, role_id) VALUES
 ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@htu.edu.gh', 1);
 
