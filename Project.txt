@@ -1,0 +1,184 @@
+Page 1:
+HTU COMPSSA CODEFEST 2024
+IT SOFTWARE SOLUTIONS FOR BUSINESS
+Style Guide
+
+Layout
+
+All user interfaces must have a header with the logo (Logo_Worldskills_Ghana.png) and a title (exception: simple dialogs).
+
+Ensure that the entire system makes good use of alignment and whitespace.
+
+Elements should be logically grouped for ease of use.
+
+The same design considerations must apply to all user interfaces and windows developed for the system, including forms, reports, letters, and documentation.
+
+Use colors and fonts that guarantee good readability and suit typical screen resolutions.
+
+At least one part of every window must have a background color other than white.
+
+Professionalism
+
+The system must be clean, consistent, visually appealing, and free of spelling and grammatical errors.
+
+Page 2:
+Graphical Guidelines
+Font:
+
+Arial
+
+Variations: regular, italic, bold
+
+Size: 10 - 36
+
+Font colors:
+
+Use primary colors in headings.
+
+Black is allowed for text on white backgrounds.
+
+Use white font on orange-brown backgrounds and black font on yellow backgrounds.
+
+Primary Colors:
+
+Orange Brown: RGB (255, 139, 0)
+
+Blue: RGB (5, 5, 137)
+
+Background Colors:
+
+Orange Brown: RGB (255, 139, 0)
+
+Yellow: RGB (245, 210, 0)
+
+White
+
+Logo:
+
+Logo_Worldskills_Ghana.png
+
+HTU Codefest 24 - Test Project.pdf
+Page 1:
+HTU COMPSSA CODEFEST 2024
+IT SOFTWARE SOLUTIONS FOR BUSINESS
+Test Project
+Duration: 10 Hours
+
+1. Instructions
+
+Read the document carefully and review attached media.
+
+Complete tasks within 10 hours and save results to the folder “COMPSSA CODEFEST 25 – your group name” on the desktop.
+
+2. Project
+2.1 Introduction
+
+Student data is stored in students.csv, including:
+
+Index No, first name, surname, programme of study, Phone No, Email, position, academic year, dues amount, start date, password.
+
+2.2 The Task
+
+Develop a departmental dues database and application with a user interface.
+
+Features:
+
+Import data from CSV, auto/manual correction.
+
+Register new students/cashiers.
+
+Implement search functionality.
+
+Include a short user guide.
+
+3. Application Structure
+
+6 Windows: Login, Control, Data (Students), Payment, Report.
+
+4 Roles: Administrator, Cashier, Supervisor, Student (with varying permissions).
+
+Login Window:
+
+Users log in with username/password.
+
+New users can create accounts.
+
+Known users can change passwords.
+
+Control Window:
+
+Links to other windows (Data, Payment, Report).
+
+Option to close the application.
+
+Data Window (Students):
+
+Import, edit, add, search, and display student data.
+
+4. Tasks
+4.1 Database Design
+
+Create a normalized database using students.csv.
+
+Include fields: username, password (encrypted), student details.
+
+Use appropriate data types, primary/foreign keys.
+
+4.2 Login Window
+
+First window shown on startup.
+
+Allow login, account creation, password changes.
+
+Store passwords encrypted.
+
+4.3 Control Window
+
+Provide navigation to other windows.
+
+4.4 Data Window (Students)
+
+Implement data import, validation, editing, adding, and searching.
+
+4.5 Documentation
+
+Provide a user guide, technical description, ERD, and application structure diagram.
+
+HTU Codefest 25 - Introduction.pdf
+Page 1:
+HTU COMPSSA CODEFEST 2025
+IT SOFTWARE SOLUTIONS FOR BUSINESS
+Introduction and Overview
+
+1.0 Instructions
+
+Read all documents and review provided media.
+
+Complete tasks within the given time and save results to the specified folder.
+
+Prioritize creating a running, well-documented, and error-free application.
+
+1.2 Evaluation Criteria
+
+Code must be properly formatted, indented, and commented.
+
+SQL queries must be injection-proof.
+
+Implement proper exception handling.
+
+Follow the Style Guide for all windows/documents.
+
+Provide documentation explaining how to access the database.
+
+1.3 Deliverables
+
+Save executable files, documentation, and source code to the folder “COMPSSA CODEFEST 25 - your group name” on the desktop.
+
+2.0 Project – Introduction and Overview
+
+Develop a desktop application with great usability.
+
+Follow the Style Guide.
+
+Include a user guide for non-technical users.
+
