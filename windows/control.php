@@ -107,12 +107,21 @@ $user_permissions = $role_permissions[$user_role] ?? [];
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Student Data</h5>
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-users me-2"></i>
+                                        <?php echo ($_SESSION['user_role'] === 'student') ? 'Student Records' : 'Student Data'; ?>
+                                    </h5>
                                 </div>
                                 <div class="card-body text-center">
                                     <i class="fas fa-users fa-3x mb-3" style="color: var(--blue);"></i>
-                                    <p>Manage student information, import CSV data, and search records.</p>
-                                    <a href="data.php" class="btn btn-primary w-100">Access Data Window</a>
+                                    <?php if ($_SESSION['user_role'] === 'student'): ?>
+                                        <p>View student information and search records (view only).</p>
+                                    <?php else: ?>
+                                        <p>Manage student information, import CSV data, and search records.</p>
+                                    <?php endif; ?>
+                                    <a href="data.php" class="btn btn-primary w-100">
+                                        <?php echo ($_SESSION['user_role'] === 'student') ? 'View Records' : 'Access Data Window'; ?>
+                                    </a>
                                 </div>
                             </div>
                         </div>

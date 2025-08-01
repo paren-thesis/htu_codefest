@@ -15,7 +15,7 @@ require_once '../config/config.php';
 require_once '../includes/functions.php';
 
 // Check if user is logged in and has permission
-if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['administrator', 'supervisor', 'lecturer'])) {
+if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['administrator', 'supervisor', 'lecturer', 'student'])) {
     redirect('login.php');
 }
 
@@ -27,19 +27,24 @@ $students = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
-    switch ($action) {
-        case 'import_csv':
-            handleCSVImport();
-            break;
-        case 'add_student':
-            handleAddStudent();
-            break;
-        case 'edit_student':
-            handleEditStudent();
-            break;
-        case 'delete_student':
-            handleDeleteStudent();
-            break;
+    // Only allow non-student roles to perform data management actions
+    if (!in_array($_SESSION['user_role'], ['student'])) {
+        switch ($action) {
+            case 'import_csv':
+                handleCSVImport();
+                break;
+            case 'add_student':
+                handleAddStudent();
+                break;
+            case 'edit_student':
+                handleEditStudent();
+                break;
+            case 'delete_student':
+                handleDeleteStudent();
+                break;
+        }
+    } else {
+        $error_message = 'You do not have permission to perform this action.';
     }
 }
 
@@ -368,7 +373,8 @@ try {
                         <div class="alert alert-success"><?php echo $success_message; ?></div>
                     <?php endif; ?>
                     
-                    <!-- Import CSV Section -->
+                    <!-- Import CSV Section - Only for Administrators, Supervisors, and Lecturers -->
+                    <?php if (!in_array($_SESSION['user_role'], ['student'])): ?>
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Import CSV Data</h5>
@@ -395,6 +401,21 @@ try {
                             </form>
                         </div>
                     </div>
+                    <?php else: ?>
+                    <!-- Student View Only Message -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-eye me-2"></i>Student Data (View Only)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Student Access:</strong> You can view student data but cannot import, add, edit, or delete records. 
+                                Only administrators, supervisors, and lecturers can manage student data.
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                     
                     <!-- Search and Filter Section -->
                     <div class="card mb-4">
@@ -449,7 +470,8 @@ try {
                         </div>
                     </div>
                     
-                    <!-- Add New Student Section -->
+                    <!-- Add New Student Section - Only for Administrators, Supervisors, and Lecturers -->
+                    <?php if (!in_array($_SESSION['user_role'], ['student'])): ?>
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Add New Student</h5>
@@ -521,6 +543,7 @@ try {
                             </form>
                         </div>
                     </div>
+                    <?php endif; ?>
                     
                     <!-- Students Table -->
                     <div class="card">
@@ -538,13 +561,15 @@ try {
                                             <th>Phone</th>
                                             <th>Programme</th>
                                             <th>Academic Year</th>
+                                            <?php if (!in_array($_SESSION['user_role'], ['student'])): ?>
                                             <th>Actions</th>
+                                            <?php endif; ?>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if (empty($students)): ?>
                                             <tr>
-                                                <td colspan="7" class="text-center">No students found.</td>
+                                                <td colspan="<?php echo in_array($_SESSION['user_role'], ['student']) ? '6' : '7'; ?>" class="text-center">No students found.</td>
                                             </tr>
                                         <?php else: ?>
                                             <?php foreach ($students as $student): ?>
@@ -555,6 +580,7 @@ try {
                                                     <td><?php echo sanitizeInput($student['phone']); ?></td>
                                                     <td><?php echo sanitizeInput($student['programme_name']); ?></td>
                                                     <td><?php echo sanitizeInput($student['academic_year']); ?></td>
+                                                    <?php if (!in_array($_SESSION['user_role'], ['student'])): ?>
                                                     <td>
                                                         <button class="btn btn-sm btn-primary" onclick="editStudent(<?php echo $student['student_id']; ?>)">
                                                             <i class="fas fa-edit"></i>
@@ -563,6 +589,7 @@ try {
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </td>
+                                                    <?php endif; ?>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
