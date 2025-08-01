@@ -160,7 +160,7 @@ try {
                                 <select class="form-control" id="role" name="role" required>
                                     <?php foreach ($roles as $role): ?>
                                         <option value="<?php echo $role['role_name']; ?>">
-                                            <?php echo ucfirst($role['role_name']); ?> - <?php echo $role['description']; ?>
+                                            <?php echo ucfirst($role['role_name']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
