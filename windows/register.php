@@ -158,11 +158,13 @@ try {
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
                                 <select class="form-control" id="role" name="role" required>
-                                    <?php foreach ($roles as $role): ?>
-                                        <option value="<?php echo $role['role_name']; ?>">
-                                            <?php echo ucfirst($role['role_name']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
+    <?php foreach ($roles as $role): ?>
+        <?php if (strtolower($role['role_name']) !== 'lecturer'): ?>
+            <option value="<?php echo $role['role_name']; ?>">
+                <?php echo ucfirst($role['role_name']); ?>
+            </option>
+        <?php endif; ?>
+    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="mb-3">

@@ -80,8 +80,7 @@ INSERT INTO roles (role_name, description) VALUES
 ('administrator', 'Full system access and control'),
 ('supervisor', 'Can view reports and manage students'),
 ('cashier', 'Can process payments and view student data'),
-('student', 'Can view own data and payment history'),
-('lecturer', 'Can view student data and reports');
+('student', 'Can view own data and payment history');
 
 -- Insert programmes from the CSV data
 INSERT INTO programmes (programme_name, programme_code) VALUES
