@@ -33,7 +33,7 @@ $email = $_SESSION['email'] ?? '';
 $role_permissions = [
     'administrator' => ['data', 'payment', 'report', 'users'],
     'supervisor' => ['data', 'payment', 'report'],
-    'cashier' => ['data', 'payment'],
+    'cashier' => ['payment'],
     'lecturer' => ['data', 'report'],
     'student' => ['data']
 ];
@@ -122,12 +122,21 @@ $user_permissions = $role_permissions[$user_role] ?? [];
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-credit-card me-2"></i>Payment Processing</h5>
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-credit-card me-2"></i>
+                                        <?php echo ($_SESSION['user_role'] === 'supervisor') ? 'Payment History' : 'Payment Processing'; ?>
+                                    </h5>
                                 </div>
                                 <div class="card-body text-center">
                                     <i class="fas fa-credit-card fa-3x mb-3" style="color: var(--orange-brown);"></i>
-                                    <p>Process dues payments, generate receipts, and track payment history.</p>
-                                    <a href="payment.php" class="btn btn-primary w-100">Access Payment Window</a>
+                                    <?php if ($_SESSION['user_role'] === 'supervisor'): ?>
+                                        <p>View payment history and track dues payments (view only).</p>
+                                    <?php else: ?>
+                                        <p>Process dues payments, generate receipts, and track payment history.</p>
+                                    <?php endif; ?>
+                                    <a href="payment.php" class="btn btn-primary w-100">
+                                        <?php echo ($_SESSION['user_role'] === 'supervisor') ? 'View Payments' : 'Access Payment Window'; ?>
+                                    </a>
                                 </div>
                             </div>
                         </div>

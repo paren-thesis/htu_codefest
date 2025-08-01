@@ -28,7 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     switch ($action) {
         case 'make_payment':
-            handleMakePayment();
+            // Only administrators and cashiers can process payments
+            if (in_array($_SESSION['user_role'], ['administrator', 'cashier'])) {
+                handleMakePayment();
+            } else {
+                $error_message = 'You do not have permission to process payments.';
+            }
             break;
     }
 }
@@ -152,7 +157,8 @@ try {
                         <div class="alert alert-success"><?php echo $success_message; ?></div>
                     <?php endif; ?>
                     
-                    <!-- Payment Form -->
+                    <!-- Payment Form - Only for Administrators and Cashiers -->
+                    <?php if (in_array($_SESSION['user_role'], ['administrator', 'cashier'])): ?>
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="fas fa-credit-card me-2"></i>Process Payment</h5>
@@ -203,6 +209,21 @@ try {
                             </form>
                         </div>
                     </div>
+                    <?php else: ?>
+                    <!-- Supervisor View Only Message -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-eye me-2"></i>Payment History (View Only)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Supervisor Access:</strong> You can view payment history but cannot process new payments. 
+                                Only administrators and cashiers can process payments.
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                     
                     <!-- Payment History Table -->
                     <div class="card">
