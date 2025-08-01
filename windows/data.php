@@ -27,6 +27,9 @@ $students = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
+    // Debug: Log the action and user role
+    error_log("Form submission - Action: $action, User Role: " . ($_SESSION['user_role'] ?? 'none'));
+    
     // Only allow non-student roles to perform data management actions
     if (!in_array($_SESSION['user_role'], ['student'])) {
         switch ($action) {
@@ -41,6 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
             case 'delete_student':
                 handleDeleteStudent();
+                break;
+            default:
+                $error_message = 'Invalid action specified.';
                 break;
         }
     } else {
@@ -194,6 +200,8 @@ function handleAddStudent() {
 function handleEditStudent() {
     global $error_message, $success_message;
     
+    error_log("handleEditStudent called with POST data: " . print_r($_POST, true));
+    
     $student_id = sanitizeInput($_POST['student_id'] ?? '');
     $index_no = sanitizeInput($_POST['index_no'] ?? '');
     $first_name = sanitizeInput($_POST['first_name'] ?? '');
@@ -202,6 +210,8 @@ function handleEditStudent() {
     $phone = sanitizeInput($_POST['phone'] ?? '');
     $academic_year = sanitizeInput($_POST['academic_year'] ?? '');
     $programme_id = sanitizeInput($_POST['programme_id'] ?? '');
+    
+    error_log("Sanitized data - student_id: $student_id, index_no: $index_no, first_name: $first_name, email: $email");
     
     if (empty($student_id) || empty($index_no) || empty($first_name) || empty($email)) {
         $error_message = 'Please fill in all required fields.';
@@ -233,7 +243,11 @@ function handleEditStudent() {
 function handleDeleteStudent() {
     global $error_message, $success_message;
     
+    error_log("handleDeleteStudent called with POST data: " . print_r($_POST, true));
+    
     $student_id = sanitizeInput($_POST['student_id'] ?? '');
+    
+    error_log("Sanitized student_id: $student_id");
     
     if (empty($student_id)) {
         $error_message = 'Invalid student ID.';
@@ -582,7 +596,16 @@ try {
                                                     <td><?php echo sanitizeInput($student['academic_year']); ?></td>
                                                     <?php if (!in_array($_SESSION['user_role'], ['student'])): ?>
                                                     <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="editStudent(<?php echo $student['student_id']; ?>)">
+                                                        <button class="btn btn-sm btn-primary" onclick="editStudent(
+                                                            <?php echo $student['student_id']; ?>,
+                                                            '<?php echo addslashes($student['index_no']); ?>',
+                                                            '<?php echo addslashes($student['first_name']); ?>',
+                                                            '<?php echo addslashes($student['surname']); ?>',
+                                                            '<?php echo addslashes($student['email']); ?>',
+                                                            '<?php echo addslashes($student['phone']); ?>',
+                                                            '<?php echo addslashes($student['academic_year']); ?>',
+                                                            '<?php echo addslashes($student['programme_id']); ?>'
+                                                        )">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <button class="btn btn-sm btn-danger" onclick="deleteStudent(<?php echo $student['student_id']; ?>)">
@@ -598,6 +621,63 @@ try {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Edit Student Modal -->
+                    <div class="modal fade" id="editStudentModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Student</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="POST">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="action" value="edit_student">
+                                        <input type="hidden" name="student_id" id="edit_student_id">
+                                        <div class="mb-3">
+                                            <label for="edit_index_no" class="form-label">Index No *</label>
+                                            <input type="text" class="form-control" id="edit_index_no" name="index_no" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_first_name" class="form-label">First Name *</label>
+                                            <input type="text" class="form-control" id="edit_first_name" name="first_name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_surname" class="form-label">Surname</label>
+                                            <input type="text" class="form-control" id="edit_surname" name="surname">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_email" class="form-label">Email *</label>
+                                            <input type="email" class="form-control" id="edit_email" name="email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_phone" class="form-label">Phone</label>
+                                            <input type="text" class="form-control" id="edit_phone" name="phone">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_academic_year" class="form-label">Academic Year</label>
+                                            <input type="text" class="form-control" id="edit_academic_year" name="academic_year">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_programme_id" class="form-label">Programme</label>
+                                            <select class="form-control" id="edit_programme_id" name="programme_id">
+                                                <option value="">Select Programme</option>
+                                                <?php foreach ($programmes as $prog): ?>
+                                                    <option value="<?php echo $prog['programme_id']; ?>">
+                                                        <?php echo $prog['programme_name']; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Update Student</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -607,12 +687,25 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        function editStudent(studentId) {
-            // Implement edit functionality
-            alert('Edit functionality will be implemented here for student ID: ' + studentId);
+        function editStudent(studentId, indexNo, firstName, surname, email, phone, academicYear, programmeId) {
+            console.log('Editing student:', {studentId, indexNo, firstName, surname, email, phone, academicYear, programmeId});
+            
+            document.getElementById('edit_student_id').value = studentId;
+            document.getElementById('edit_index_no').value = indexNo;
+            document.getElementById('edit_first_name').value = firstName;
+            document.getElementById('edit_surname').value = surname;
+            document.getElementById('edit_email').value = email;
+            document.getElementById('edit_phone').value = phone;
+            document.getElementById('edit_academic_year').value = academicYear;
+            document.getElementById('edit_programme_id').value = programmeId;
+            
+            const modal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            modal.show();
         }
         
         function deleteStudent(studentId) {
+            console.log('Deleting student:', studentId);
+            
             if (confirm('Are you sure you want to delete this student?')) {
                 const form = document.createElement('form');
                 form.method = 'POST';
@@ -626,4 +719,4 @@ try {
         }
     </script>
 </body>
-</html> 
+</html>
