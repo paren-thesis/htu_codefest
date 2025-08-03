@@ -294,12 +294,30 @@ body {
 
 .card-header {
     background: linear-gradient(135deg, var(--blue) 0%, #1a1a5e 100%);
-    color: var(--white);
+    color: var(--white) !important;
     font-weight: bold;
     border-radius: 20px 20px 0 0 !important;
     padding: 20px;
     position: relative;
     overflow: hidden;
+}
+
+/* Ensure all text in card headers is white */
+.card-header * {
+    color: var(--white) !important;
+}
+
+.card-header h5 {
+    color: var(--white) !important;
+    font-weight: bold;
+    margin: 0;
+}
+
+.card-header .fa,
+.card-header .fas,
+.card-header .far,
+.card-header .fab {
+    color: var(--white) !important;
 }
 
 .card-header::before {
